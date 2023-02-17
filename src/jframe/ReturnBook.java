@@ -24,7 +24,7 @@ public class ReturnBook extends javax.swing.JFrame {
     public void getIssueBookDetails(){
         
         int bookId = Integer.parseInt(txt_bookId.getText());
-        int studentId = Integer.parseInt(txt_bookId.getText());
+        int studentId = Integer.parseInt(txt_studentId.getText());
         try{
             Connection con = DBConnection.getConnection();
             String sql ="select * from issue_book_details where book_id=? and student_id =? and status = ?";
@@ -44,10 +44,41 @@ public class ReturnBook extends javax.swing.JFrame {
             }else{
                 
                 lbl_bookError.setText("No record found");
+                lbl_issueId.setText("");
+                lbl_bookName.setText("");
+                lbl_studentName.setText("");
+                lbl_issueDate.setText("");
+                lbl_dueDate.setText("");
             }
         }catch (Exception e){
+            e.printStackTrace();
         }
         
+    }
+    //return book
+    public boolean returnBook(){
+        boolean isReturned = false;
+        int bookId = Integer.parseInt(txt_bookId.getText());
+        int studentId = Integer.parseInt(txt_studentId.getText());
+        
+        try{
+            Connection con = DBConnection.getConnection();
+                String sql = "update issue_book_details set status =? where student_id=? and book_id=? and status=?";
+                PreparedStatement pst = con.prepareStatement(sql);
+                pst.setString(1,"returned");
+                pst.setInt(2, studentId);
+                pst.setInt(3, bookId);
+                pst.setString(4, "pending");
+                int rowCount = pst.executeUpdate();
+                if(rowCount>0){
+                    isReturned=true;
+                }else{
+                    isReturned=false;
+                }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return isReturned;
     }
     
     
@@ -59,15 +90,15 @@ public class ReturnBook extends javax.swing.JFrame {
         int bookId = Integer.parseInt(txt_bookId.getText());
         try{
             Connection con = DBConnection.getConnection();
-            String sql  = "update book_details set quantity = quantity -1 where book_id =?";
+            String sql  = "update book_details set quantity = quantity +1 where book_id =?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, bookId);
             
             int rowCount = pst.executeUpdate();
             if(rowCount>0){
                 JOptionPane.showMessageDialog(this,"Book count updated");
-                int  initialCount = Integer.parseInt(lbl_dueDate.getText());
-                lbl_dueDate.setText(Integer.toString(initialCount -1));
+                
+                
             }else{
                 JOptionPane.showMessageDialog(this,"Book count  didn't updated");
             }
@@ -92,7 +123,6 @@ public class ReturnBook extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
-        lbl_bookError = new javax.swing.JLabel();
         lbl_dueDate = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
@@ -119,6 +149,7 @@ public class ReturnBook extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         rSMaterialButtonCircle3 = new rojerusan.RSMaterialButtonCircle();
         jLabel23 = new javax.swing.JLabel();
+        lbl_bookError = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -149,10 +180,6 @@ public class ReturnBook extends javax.swing.JFrame {
         );
 
         jPanel3.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, 280, 5));
-
-        lbl_bookError.setFont(new java.awt.Font("Yu Gothic UI", 0, 20)); // NOI18N
-        lbl_bookError.setForeground(new java.awt.Color(255, 255, 0));
-        jPanel3.add(lbl_bookError, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 630, 300, 50));
 
         lbl_dueDate.setFont(new java.awt.Font("Yu Gothic UI", 0, 20)); // NOI18N
         lbl_dueDate.setForeground(new java.awt.Color(255, 255, 255));
@@ -204,7 +231,7 @@ public class ReturnBook extends javax.swing.JFrame {
         lbl_issueDate.setForeground(new java.awt.Color(255, 255, 255));
         jPanel3.add(lbl_issueDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 550, 140, 30));
 
-        panel_main.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 0, 420, 900));
+        panel_main.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 0, 400, 900));
 
         jLabel3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 25)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -221,31 +248,32 @@ public class ReturnBook extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 25)); // NOI18N
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AddNewBookIcons/icons8_Books_52px_1.png"))); // NOI18N
         jLabel1.setText("Return Book");
-        panel_main.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1430, 160, -1, -1));
+        panel_main.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 280, -1, -1));
 
         jPanel4.setBackground(new java.awt.Color(4, 170, 109));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        panel_main.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1410, 220, 260, 5));
+        panel_main.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 340, 260, 5));
 
         jPanel7.setBackground(new java.awt.Color(4, 170, 109));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel9.setBackground(new java.awt.Color(241, 51, 51));
-        jLabel9.setFont(new java.awt.Font("Verdana", 1, 35)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Sylfaen", 1, 36)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("X");
+        jLabel9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel9MouseClicked(evt);
             }
         });
-        jPanel7.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, 40, 40));
+        jPanel7.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, 50, 60));
 
-        panel_main.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1700, 0, 130, 40));
+        panel_main.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1400, 0, 130, 40));
 
         jLabel10.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
         jLabel10.setText("Book Id :");
-        panel_main.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(1270, 310, -1, -1));
+        panel_main.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 430, -1, -1));
 
         txt_bookId.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(4, 170, 109)));
         txt_bookId.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -260,7 +288,7 @@ public class ReturnBook extends javax.swing.JFrame {
                 txt_bookIdActionPerformed(evt);
             }
         });
-        panel_main.add(txt_bookId, new org.netbeans.lib.awtextra.AbsoluteConstraints(1400, 300, 290, -1));
+        panel_main.add(txt_bookId, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 420, 290, -1));
 
         txt_studentId.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(4, 170, 109)));
         txt_studentId.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -275,11 +303,11 @@ public class ReturnBook extends javax.swing.JFrame {
                 txt_studentIdActionPerformed(evt);
             }
         });
-        panel_main.add(txt_studentId, new org.netbeans.lib.awtextra.AbsoluteConstraints(1400, 360, 290, -1));
+        panel_main.add(txt_studentId, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 480, 290, -1));
 
         jLabel18.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
         jLabel18.setText("Student  Id");
-        panel_main.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(1260, 370, -1, 20));
+        panel_main.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 490, -1, 20));
 
         rSMaterialButtonCircle2.setBackground(new java.awt.Color(4, 170, 109));
         rSMaterialButtonCircle2.setText("FIND");
@@ -288,7 +316,7 @@ public class ReturnBook extends javax.swing.JFrame {
                 rSMaterialButtonCircle2ActionPerformed(evt);
             }
         });
-        panel_main.add(rSMaterialButtonCircle2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1550, 440, 180, 60));
+        panel_main.add(rSMaterialButtonCircle2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1230, 560, 180, 60));
 
         jPanel5.setBackground(new java.awt.Color(4, 170, 109));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -297,6 +325,7 @@ public class ReturnBook extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AddNewBookIcons/icons8_Rewind_48px.png"))); // NOI18N
         jLabel11.setText("Back");
+        jLabel11.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel11MouseClicked(evt);
@@ -313,15 +342,19 @@ public class ReturnBook extends javax.swing.JFrame {
                 rSMaterialButtonCircle3ActionPerformed(evt);
             }
         });
-        panel_main.add(rSMaterialButtonCircle3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1350, 440, 180, 60));
+        panel_main.add(rSMaterialButtonCircle3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 560, 180, 60));
 
         jLabel23.setFont(new java.awt.Font("Yu Gothic UI", 0, 20)); // NOI18N
         jLabel23.setForeground(new java.awt.Color(255, 255, 255));
         jLabel23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/library-2.png"))); // NOI18N
         jLabel23.setText("Issue date");
-        panel_main.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 780, 790));
+        panel_main.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 90, 340, 790));
 
-        getContentPane().add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1830, 900));
+        lbl_bookError.setFont(new java.awt.Font("Yu Gothic UI", 0, 20)); // NOI18N
+        lbl_bookError.setForeground(new java.awt.Color(255, 255, 0));
+        panel_main.add(lbl_bookError, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 620, 300, 50));
+
+        getContentPane().add(panel_main, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1530, 900));
 
         setSize(new java.awt.Dimension(1840, 907));
         setLocationRelativeTo(null);
@@ -355,13 +388,18 @@ public class ReturnBook extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_studentIdActionPerformed
 
     private void rSMaterialButtonCircle2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMaterialButtonCircle2ActionPerformed
-        
+        getIssueBookDetails();
         
         
     }//GEN-LAST:event_rSMaterialButtonCircle2ActionPerformed
 
     private void rSMaterialButtonCircle3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMaterialButtonCircle3ActionPerformed
-        // TODO add your handling code here:
+        if(returnBook()==true){
+            JOptionPane.showMessageDialog(this,"Book returned succesfully");
+            updateBookCount();
+        }else{
+            JOptionPane.showMessageDialog(this,"Book returned failed");
+        }
     }//GEN-LAST:event_rSMaterialButtonCircle3ActionPerformed
 
     /**

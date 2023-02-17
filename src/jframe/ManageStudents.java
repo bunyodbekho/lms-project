@@ -23,13 +23,14 @@ public class ManageStudents extends javax.swing.JFrame {
     /**
      * Creates new form ManageBooks
      */
-    String studentName,course,branch;
+    String studentName,course,branch,psw;
     int studentId;
     DefaultTableModel model;
     public ManageStudents() {
         initComponents();
         setStudentDetailsToTable();
     }
+    
     //to set book details into the table
     public void setStudentDetailsToTable(){
         try{
@@ -42,7 +43,8 @@ public class ManageStudents extends javax.swing.JFrame {
                 String StudentName = rs.getString("name");
                 String course = rs.getString("course");
                 String branch = rs.getString("branch");
-                Object[] obj = {StudentId,StudentName,course,branch};
+                String psw = rs.getString("password");
+                Object[] obj = {StudentId,StudentName,course,branch,psw};
                 model = (DefaultTableModel)tbl_studentDetails.getModel();
                 model.addRow(obj);
             }
@@ -58,14 +60,16 @@ public class ManageStudents extends javax.swing.JFrame {
         studentName = txt_studentName.getText();
         course = combo_CourseName.getSelectedItem().toString();
         branch = combo_branch.getSelectedItem().toString();
+        psw = txt_studentpsw.getText();
         try{
             Connection con = DBConnection.getConnection();
-            String sql = "insert into student_details values(?,?,?,?)";
+            String sql = "insert into student_details values(?,?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, studentId);
             pst.setString(2, studentName);
             pst.setString(3, course);
             pst.setString(4, branch);
+            pst.setString(5,psw);
             int rowCount =pst.executeUpdate();
             if(rowCount>0){
                 isAdded = true;
@@ -86,15 +90,18 @@ public class ManageStudents extends javax.swing.JFrame {
         studentName = txt_studentName.getText();
         course = combo_CourseName.getSelectedItem().toString();
         branch = combo_branch.getSelectedItem().toString();
+        psw = txt_studentpsw.getText();
         
         try{
             Connection con = DBConnection.getConnection();
-            String sql = "update student_details set name=?,course=?,branch=? where student_id=?" ;
+            String sql = "update student_details set name=?,course=?,branch=?,password=? where student_id=?" ;
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, studentName);
             pst.setString(2, course);
             pst.setString(3, branch);
-            pst.setInt(4, studentId);
+            pst.setString(4, psw);
+            pst.setInt(5, studentId);
+            
             int rowCount = pst.executeUpdate();
             if(rowCount>0){
                 isUpdated = true;
@@ -163,6 +170,9 @@ public class ManageStudents extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         combo_branch = new javax.swing.JComboBox<>();
         combo_CourseName = new javax.swing.JComboBox<>();
+        txt_studentpsw = new app.bolivia.swing.JCTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -255,7 +265,7 @@ public class ManageStudents extends javax.swing.JFrame {
                 rSMaterialButtonCircle1ActionPerformed(evt);
             }
         });
-        jPanel1.add(rSMaterialButtonCircle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 560, -1, 50));
+        jPanel1.add(rSMaterialButtonCircle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 660, -1, 50));
 
         rSMaterialButtonCircle2.setBackground(new java.awt.Color(4, 170, 109));
         rSMaterialButtonCircle2.setText("Add");
@@ -264,7 +274,7 @@ public class ManageStudents extends javax.swing.JFrame {
                 rSMaterialButtonCircle2ActionPerformed(evt);
             }
         });
-        jPanel1.add(rSMaterialButtonCircle2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 560, -1, 50));
+        jPanel1.add(rSMaterialButtonCircle2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 660, -1, 50));
 
         rSMaterialButtonCircle3.setBackground(new java.awt.Color(4, 170, 109));
         rSMaterialButtonCircle3.setText("Update");
@@ -273,7 +283,7 @@ public class ManageStudents extends javax.swing.JFrame {
                 rSMaterialButtonCircle3ActionPerformed(evt);
             }
         });
-        jPanel1.add(rSMaterialButtonCircle3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 560, -1, 50));
+        jPanel1.add(rSMaterialButtonCircle3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 660, -1, 50));
 
         jPanel4.setBackground(new java.awt.Color(4, 170, 109));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -282,6 +292,7 @@ public class ManageStudents extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AddNewBookIcons/icons8_Rewind_48px.png"))); // NOI18N
         jLabel6.setText("Back");
+        jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel6MouseClicked(evt);
@@ -299,6 +310,31 @@ public class ManageStudents extends javax.swing.JFrame {
         combo_CourseName.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FRESHMAN", "SOPHOMORE" }));
         jPanel1.add(combo_CourseName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 430, 280, 30));
 
+        txt_studentpsw.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 255, 255)));
+        txt_studentpsw.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txt_studentpsw.setPlaceholder("Enter Student  Password");
+        txt_studentpsw.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txt_studentpswFocusLost(evt);
+            }
+        });
+        txt_studentpsw.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_studentpswActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txt_studentpsw, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 610, 290, -1));
+
+        jLabel8.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AddNewBookIcons/icons8_Contact_26px.png"))); // NOI18N
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 550, 30, 60));
+
+        jLabel12.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Enter Student  Password");
+        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 570, -1, -1));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 570, 900));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -307,15 +343,16 @@ public class ManageStudents extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(4, 170, 109));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Verdana", 1, 35)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Sylfaen", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("X");
+        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel1MouseClicked(evt);
             }
         });
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, 40, 40));
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, 50, 60));
 
         jPanel3.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 0, 130, 40));
 
@@ -324,7 +361,7 @@ public class ManageStudents extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Student ID", "Name", "Course", "Branch"
+                "Student ID", "Name", "Course", "Branch", "Password"
             }
         ));
         tbl_studentDetails.setColorBackgoundHead(new java.awt.Color(4, 170, 109));
@@ -435,7 +472,16 @@ public class ManageStudents extends javax.swing.JFrame {
         txt_studentName.setText(model.getValueAt(rowNo,1).toString());
         combo_CourseName.setSelectedItem(model.getValueAt(rowNo,2).toString());
         combo_branch.setSelectedItem(model.getValueAt(rowNo,3).toString());
+        txt_studentpsw.setText(model.getValueAt(rowNo, 4).toString());
     }//GEN-LAST:event_tbl_studentDetailsMouseClicked
+
+    private void txt_studentpswFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_studentpswFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_studentpswFocusLost
+
+    private void txt_studentpswActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_studentpswActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_studentpswActionPerformed
 
     /**
      * @param args the command line arguments
@@ -479,12 +525,14 @@ public class ManageStudents extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -499,5 +547,6 @@ public class ManageStudents extends javax.swing.JFrame {
     private javax.swing.JLabel txt_some;
     private app.bolivia.swing.JCTextField txt_studentId;
     private app.bolivia.swing.JCTextField txt_studentName;
+    private app.bolivia.swing.JCTextField txt_studentpsw;
     // End of variables declaration//GEN-END:variables
 }

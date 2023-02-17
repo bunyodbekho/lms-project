@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 
@@ -45,7 +47,7 @@ public class SignupPage extends javax.swing.JFrame {
                page.setVisible(true);
                this.dispose();
             }else{
-                JOptionPane.showMessageDialog(this,"ishlamadi");
+                JOptionPane.showMessageDialog(this,"smth wrong");
             }
         }
         catch(Exception e){
@@ -65,8 +67,12 @@ public class SignupPage extends javax.swing.JFrame {
         if(pwd.equals("")){
             JOptionPane.showMessageDialog(this, "Please enter password");
             return false;
+        } else if(pwd.length() < 8){
+            JOptionPane.showMessageDialog(this, "Password should contain at least 8 characters");
+            return false;
         }
-        if(email.equals("") || email.matches("^.+@.+\\..+$")){
+       
+        if( email.equals("") || !email.matches("^.+@.+\\..+$")){
             JOptionPane.showMessageDialog(this, "Please enter valid email");
             return false;
         }
@@ -137,16 +143,15 @@ public class SignupPage extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(890, 800));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(102, 102, 252));
-        jLabel1.setText("Advance Library");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 150, -1, -1));
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(4, 170, 109));
+        jLabel1.setText("ADVANCED LIRARY");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 150, -1, -1));
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/library-2.png"))); // NOI18N
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, 180, 990, 560));
 
-        jLabel6.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 52, 52));
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel6.setText("WELCOME TO");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 120, -1, -1));
 
@@ -162,20 +167,21 @@ public class SignupPage extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Account_50px.png"))); // NOI18N
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 190, 50, 60));
 
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Sylfaen", 1, 36)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("X");
+        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel7MouseClicked(evt);
             }
         });
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 0, -1, -1));
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(498, 0, 30, 70));
 
         jLabel8.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Create New Account");
-        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, -1, -1));
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 130, -1, -1));
 
         txt_username.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(255, 255, 255)));
         txt_username.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -277,8 +283,8 @@ public class SignupPage extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("Calibri", 0, 48)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("Signup Page");
-        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, -1, -1));
+        jLabel10.setText("Admin Signup Page");
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 70, -1, -1));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 0, 540, 830));
 
